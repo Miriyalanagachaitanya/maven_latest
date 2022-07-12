@@ -1,0 +1,32 @@
+pipeline {
+    // agent{
+    //     label  "master"
+    // } 
+    agent any
+    tools{
+        maven 'maven3.8.6'
+    }
+    triggers{
+        pollSCM('* * * * *')
+    }
+    options {
+      timestamps()
+      buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '2', daysToKeepStr: '', numToKeepStr: '2')
+    }
+
+    stages {
+        stage('checkout') {
+            steps {
+                 git branch: 'main', credentialsId: 'b590418a-1ba0-4e7d-9ef7-d8e8881957f9', url: 'https://github.com/Miriyalanagachaitanya/maven_latest.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh "mvn clean package"
+            }
+        }
+    }
+    
+        
+    
+}
